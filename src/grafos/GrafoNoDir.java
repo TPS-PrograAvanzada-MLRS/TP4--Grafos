@@ -20,14 +20,26 @@ public class GrafoNoDir {
     for (int i = 0; i < cantNodos; i++)
       nodos[i] = i;
     matriz = new MatrizAdy(cantNodos);
-    int tamGrupo = cantNodos / nPartito;
-    if (cantNodos % nPartito != 0)
-      tamGrupo += 1;
-    for (int h = 0; h < cantNodos; h += tamGrupo) {
-      for (int i = h; i < tamGrupo + h; i++) {
-        for (int j = h + tamGrupo; j < cantNodos; j++) {
+    if (nPartito <= cantNodos / 2) {
+      int tamGrupo = cantNodos / nPartito;
+      if (cantNodos % nPartito != 0)
+        tamGrupo += 1;
+      for (int h = 0; h < cantNodos; h += tamGrupo) {
+        for (int i = h; i < tamGrupo + h; i++) {
+          for (int j = h + tamGrupo; j < cantNodos; j++) {
+            matriz.agregar(i, j);
+          }
+        }
+      }
+    } else {
+      int cantASacar = cantNodos % nPartito;
+      for (int i = 0; i < cantNodos - 1; i++) {
+        for (int j = i + 1; j < cantNodos; j++) {
           matriz.agregar(i, j);
         }
+      }
+      for (int i = 0; i < cantASacar; i++) {
+        matriz.sacar(i, i + 1);
       }
     }
   }
@@ -137,7 +149,8 @@ public class GrafoNoDir {
   }
 
   public void coloreoWP() {
-    boolean[] nodoColoreado = new boolean[nodos.length]; // array que representa si un nodo tiene color
+    boolean[] nodoColoreado = new boolean[nodos.length]; // array que representa si un nodo tiene
+                                                         // color
     int[] colorNodo = new int[nodos.length]; // array que representa el color de un nodo
     int colorActual = 1;
 
@@ -146,20 +159,20 @@ public class GrafoNoDir {
     for (int i = 0; i < nodos.length; i++)
       monticuloMax.add(matriz.getGrado(i));
     int maxGrado = monticuloMax.poll();
-    while(!monticuloMax.isEmpty()) {
+    while (!monticuloMax.isEmpty()) {
       pintar(maxGrado, colorNodo, nodos, colorActual);
-      for(int i = 0; i < nodos.length ; i++) {
-        if( matriz.getGrado(i) == maxGrado && !nodoColoreado[i]) {
+      for (int i = 0; i < nodos.length; i++) {
+        if (matriz.getGrado(i) == maxGrado && !nodoColoreado[i]) {
           colorNodo[i] = colorActual;
           nodoColoreado[i] = true;
           break;
         }
       }
-      for (int i = 0; i < nodos.length ; i++) {
-        if(!nodoColoreado[i]) {
-          for(int j = 0; j < nodos.length ; j++) {
+      for (int i = 0; i < nodos.length; i++) {
+        if (!nodoColoreado[i]) {
+          for (int j = 0; j < nodos.length; j++) {
             if (matriz.getValue(i, j) == 0 || colorNodo[j] == colorActual) { // Si tiene un vecino
-            // Inserte su lógica aqui.
+              // Inserte su lógica aqui.
             }
           }
         }
@@ -168,11 +181,10 @@ public class GrafoNoDir {
       maxGrado = monticuloMax.poll();
     }
   }
-  
 
-  private void pintar(int maxGrado, int[] colores, int[] nodos,int colorActual) {
+  private void pintar(int maxGrado, int[] colores, int[] nodos, int colorActual) {
     for (int i = 0; i < nodos.length; i++) {
-      
+
     }
   }
 
