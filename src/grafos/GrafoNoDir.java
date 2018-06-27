@@ -11,15 +11,21 @@ import java.util.Random;
 public class GrafoNoDir {
   int[] nodos;
   MatrizAdy matriz;
+  
+  public GrafoNoDir(int cantNodos) {
+    nodos = new int[cantNodos];
+    for ( int i = 0; i < cantNodos; i++) {
+      nodos[i] = i;
+    }
+    matriz = new MatrizAdy(cantNodos);
+  }
+  
 
   // Generador de grafos n partitos.
   public GrafoNoDir(int cantNodos, int nPartito, boolean separador) {
+    this(cantNodos);
     if (nPartito > cantNodos)
       return;
-    nodos = new int[cantNodos];
-    for (int i = 0; i < cantNodos; i++)
-      nodos[i] = i;
-    matriz = new MatrizAdy(cantNodos);
     if (nPartito <= cantNodos / 2) {
       int tamGrupo = cantNodos / nPartito;
       if (cantNodos % nPartito != 0)
@@ -44,13 +50,10 @@ public class GrafoNoDir {
     }
   }
 
-  // Generador de grafos regulares dados Cantidad de nodos y prob de conexión
-  public GrafoNoDir(int cantNodos, double probArista) {
-    nodos = new int[cantNodos];
-    for (int i = 0; i < cantNodos; i++)
-      nodos[i] = i;
+  // Generador de grafos dados Cantidad de nodos y prob de conexión
+  public GrafoNoDir(int cantNodos, double probArista, boolean separador) {
+    this(cantNodos);
     Random rand = new Random();
-    matriz = new MatrizAdy(cantNodos);
     for (int i = 0; i < cantNodos; i++) {
       for (int j = i; j < cantNodos; j++) {
         if (rand.nextDouble() <= probArista)
@@ -58,13 +61,29 @@ public class GrafoNoDir {
       }
     }
   }
+  
+  // Generador de grafos dado un pocentaje de adyacencia
+  public GrafoNoDir(int cantNodos, double pAdy) {
+    this(cantNodos);
+    int i, j;
+    Random rand = new Random();
+    int cantAristas = (int) Math.round(pAdy * cantNodos * (cantNodos -1)/2);
+    int contadorAristas = 0;
+    while(contadorAristas < cantAristas) {
+      i = rand.nextInt(cantNodos);
+      j = rand.nextInt(cantNodos);
+      while (j == i)
+        j = rand.nextInt(cantNodos);
+      if(!matriz.isSet(i, j)) {
+        matriz.agregar(i, j);
+        contadorAristas++;
+      }
+    }
+  }
 
   // Generador de grafos regulares dados Cantidad de nodos y grado.
   public GrafoNoDir(int cantNodos, int grado) {
-    nodos = new int[cantNodos];
-    for (int i = 0; i < cantNodos; i++)
-      nodos[i] = i;
-    matriz = new MatrizAdy(cantNodos);
+    this(cantNodos);
     Random rand = new Random();
     for (int i = 0; i < cantNodos; i++) {
       while (matriz.getGrado(i) < grado) {
@@ -160,7 +179,6 @@ public class GrafoNoDir {
       monticuloMax.add(matriz.getGrado(i));
     int maxGrado = monticuloMax.poll();
     while (!monticuloMax.isEmpty()) {
-      pintar(maxGrado, colorNodo, nodos, colorActual);
       for (int i = 0; i < nodos.length; i++) {
         if (matriz.getGrado(i) == maxGrado && !nodoColoreado[i]) {
           colorNodo[i] = colorActual;
@@ -179,12 +197,6 @@ public class GrafoNoDir {
       }
       colorActual++;
       maxGrado = monticuloMax.poll();
-    }
-  }
-
-  private void pintar(int maxGrado, int[] colores, int[] nodos, int colorActual) {
-    for (int i = 0; i < nodos.length; i++) {
-
     }
   }
 

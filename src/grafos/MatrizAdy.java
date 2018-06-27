@@ -45,7 +45,14 @@ public class MatrizAdy {
       return getValue(b, a);
     return matriz[a][b - a - 1];
   }
-
+  
+  public boolean isSet(int a,int b) {
+   int valor = this.getValue(a, b);
+   if (valor == 0)
+     return false;
+   return true;
+  }
+  
   public int getGrado(int a) {
     return grados[a];
   }
