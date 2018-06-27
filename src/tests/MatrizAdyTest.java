@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import grafos.MatrizAdy;
+import grafos.MatrizSimetrica;
 
 class MatrizAdyTest {
 
   @Test
   void test() {
-    MatrizAdy matriz = new MatrizAdy(5);
+    MatrizSimetrica matriz = new MatrizSimetrica(5);
     matriz.agregar(1, 2, 3);
     matriz.agregar(1, 3, 4);
     matriz.agregar(3, 2, 2);

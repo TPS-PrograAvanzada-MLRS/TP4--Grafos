@@ -1,10 +1,10 @@
 package grafos;
 
-public class MatrizAdy {
+public class MatrizSimetrica {
   private int matriz[][];
   private int grados[];
 
-  public MatrizAdy(int size) {
+  public MatrizSimetrica(int size) {
     matriz = new int[size - 1][];
     grados = new int[size];
     for (int i = 0; i < size - 1; i++) {
