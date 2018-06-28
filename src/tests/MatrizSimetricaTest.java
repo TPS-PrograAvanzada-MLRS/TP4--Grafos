@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import grafos.MatrizSimetrica;
 
-class MatrizAdyTest {
+class MatrizSimetricaTest {
 
   @Test
   void test() {

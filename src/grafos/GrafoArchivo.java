@@ -13,7 +13,6 @@ public class GrafoArchivo extends Grafo {
     try {
       FileReader fr = new FileReader(path);
       lector = new BufferedReader(fr);
-
       String[] linea = lector.readLine().split(" ");
       int cantNodos = Integer.parseInt(linea[0]);
       int cantAristas = Integer.parseInt(linea[1]);
@@ -37,6 +36,4 @@ public class GrafoArchivo extends Grafo {
       e.printStackTrace();
     }
   }
-  }
-
 }

@@ -14,10 +14,10 @@ public class GrafoRegular extends Grafo {
     super(cantNodos);
     if (probAdy > 1.0)
       return;
-    int grado = (int) Math.round(probAdy * (cantNodos-1));
+    int grado = (int) Math.round(probAdy * (cantNodos - 1));
     generar(cantNodos, grado);
   }
-  
+
   private void generar(int cantNodos, int grado) {
     Random rand = new Random();
     for (int i = 0; i < cantNodos; i++) {

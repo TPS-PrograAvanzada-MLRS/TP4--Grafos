@@ -23,7 +23,7 @@ public class MatrizSimetrica {
       grados[a]++;
       grados[b]++;
     }
-    if( this.getValue(a, b) != 0 && costo == 0) {
+    if (this.getValue(a, b) != 0 && costo == 0) {
       grados[a]--;
       grados[b]--;
     }
@@ -45,14 +45,14 @@ public class MatrizSimetrica {
       return getValue(b, a);
     return matriz[a][b - a - 1];
   }
-  
-  public boolean isSet(int a,int b) {
-   int valor = this.getValue(a, b);
-   if (valor == 0)
-     return false;
-   return true;
+
+  public boolean isSet(int a, int b) {
+    int valor = this.getValue(a, b);
+    if (valor == 0)
+      return false;
+    return true;
   }
-  
+
   public int getGrado(int a) {
     return grados[a];
   }

@@ -1,19 +1,23 @@
 package grafos;
 
+import java.util.AbstractQueue;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public abstract class Grafo {
   int[] nodos;
   MatrizSimetrica matriz;
-  
+
   public Grafo(int cantNodos) {
     nodos = new int[cantNodos];
     for (int i = 0; i < cantNodos; i++)
       nodos[i] = i;
     matriz = new MatrizSimetrica(cantNodos);
   }
-  
+
   public int[] dijkstra(int inicio) {
     int nodoActual = inicio;
 
@@ -53,38 +57,65 @@ public abstract class Grafo {
     }
     return resultado;
   }
-  
-  public void coloreoWP() {
-    boolean[] nodoColoreado = new boolean[nodos.length]; // array que representa si un nodo tiene
-                                                         // color
-    int[] colorNodo = new int[nodos.length]; // array que representa el color de un nodo
-    int colorActual = 1;
 
+  public int coloreoWP() {
     PriorityQueue<Integer> monticuloMax = new PriorityQueue<Integer>(nodos.length,
         Collections.reverseOrder());
-    for (int i = 0; i < nodos.length; i++)
+    for (int i = 0; i < nodos.length; i++)  
       monticuloMax.add(matriz.getGrado(i));
-    int maxGrado = monticuloMax.poll();
-    while (!monticuloMax.isEmpty()) {
+    return coloreo(monticuloMax);
+  }
+
+  public int coloreoMatula() {
+    PriorityQueue<Integer> monticuloMin = new PriorityQueue<Integer>(nodos.length);
+    for (int i = 0; i < nodos.length; i++)  
+      monticuloMin.add(matriz.getGrado(i));
+    return coloreo(monticuloMin);
+  }
+
+  public int coloreoSA() {
+    Queue<Integer> cola = new LinkedList<Integer>();
+    for(int i = 0; i < nodos.length; i++) 
+      cola.add(nodos[i]);
+    Collections.shuffle((List<Integer>) cola);
+    return coloreo(cola);
+  }
+  private int coloreo(Queue<Integer> cola) {
+    boolean[] nodoColoreado = new boolean[nodos.length]; // array que dice si un nodo tiene color
+    int[] colorNodo = new int[nodos.length]; // array que representa el color de un nodo
+    int colorActual = 0;
+    int siguiente = cola.poll();
+    while (!cola.isEmpty()) {
       for (int i = 0; i < nodos.length; i++) {
-        if (matriz.getGrado(i) == maxGrado && !nodoColoreado[i]) {
+        if (matriz.getGrado(i) == siguiente && !nodoColoreado[i]) {
+          colorActual++;
+          // System.out.println("Empiezo pintando el nodo " + i + " Con el color " +
+          // colorActual);
           colorNodo[i] = colorActual;
           nodoColoreado[i] = true;
           break;
         }
       }
       for (int i = 0; i < nodos.length; i++) {
-        if (!nodoColoreado[i]) {
+        if (!nodoColoreado[i]) { // Tiene Color?
+          boolean sePuedePintar = true;
           for (int j = 0; j < nodos.length; j++) {
-            if (matriz.getValue(i, j) == 0 || colorNodo[j] == colorActual) { // Si tiene un vecino
-              // Inserte su lógica aqui.
+            // j es un vecino? Tiene el mismo color?
+            if (matriz.getValue(i, j) != 0 && colorNodo[j] == colorActual) {
+              sePuedePintar = false;
+              break;
             }
+          }
+          if (sePuedePintar) {
+            // System.out.println("Pintando Nodo " + i + " de color " + colorActual);
+            colorNodo[i] = colorActual;
+            nodoColoreado[i] = true;
           }
         }
       }
-      colorActual++;
-      maxGrado = monticuloMax.poll();
+      siguiente = cola.poll();
     }
+    return colorActual;
   }
 
   public String toString() {
@@ -93,5 +124,5 @@ public abstract class Grafo {
       out += nodos[i] + " ";
     return "lista de nodos: " + out + "\n" + "Matriz de Adyacencia: \n" + matriz.toString();
   }
-  
+
 }
