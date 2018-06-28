@@ -1,9 +1,9 @@
 package grafos;
 
-import java.util.AbstractQueue;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -58,29 +58,37 @@ public abstract class Grafo {
     return resultado;
   }
 
-  public int coloreoWP() {
+  public void coloreoWP(String path) {
     PriorityQueue<Integer> monticuloMax = new PriorityQueue<Integer>(nodos.length,
         Collections.reverseOrder());
-    for (int i = 0; i < nodos.length; i++)  
+    for (int i = 0; i < nodos.length; i++)
       monticuloMax.add(matriz.getGrado(i));
-    return coloreo(monticuloMax);
+    coloreo(monticuloMax, path);
   }
 
-  public int coloreoMatula() {
+  public void coloreoMatula(String path) {
     PriorityQueue<Integer> monticuloMin = new PriorityQueue<Integer>(nodos.length);
-    for (int i = 0; i < nodos.length; i++)  
+    for (int i = 0; i < nodos.length; i++)
       monticuloMin.add(matriz.getGrado(i));
-    return coloreo(monticuloMin);
+    coloreo(monticuloMin, path);
   }
 
-  public int coloreoSA() {
+  public void coloreoSA(String path) {
     Queue<Integer> cola = new LinkedList<Integer>();
-    for(int i = 0; i < nodos.length; i++) 
-      cola.add(nodos[i]);
-    Collections.shuffle((List<Integer>) cola);
-    return coloreo(cola);
+    for (int i = 0; i < nodos.length; i++)
+      cola.add(matriz.getGrado(i));
+//    Collections.shuffle((List<Integer>) cola);
+    coloreo(cola, path);
   }
-  private int coloreo(Queue<Integer> cola) {
+
+  private void coloreo(Queue<Integer> cola, String path) {
+    PrintWriter writer = null;
+    try {
+      writer = new PrintWriter(path);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
     boolean[] nodoColoreado = new boolean[nodos.length]; // array que dice si un nodo tiene color
     int[] colorNodo = new int[nodos.length]; // array que representa el color de un nodo
     int colorActual = 0;
@@ -89,8 +97,7 @@ public abstract class Grafo {
       for (int i = 0; i < nodos.length; i++) {
         if (matriz.getGrado(i) == siguiente && !nodoColoreado[i]) {
           colorActual++;
-          // System.out.println("Empiezo pintando el nodo " + i + " Con el color " +
-          // colorActual);
+//          System.out.println("Empiezo pintando el nodo " + i + " Con el color " + colorActual);
           colorNodo[i] = colorActual;
           nodoColoreado[i] = true;
           break;
@@ -107,7 +114,7 @@ public abstract class Grafo {
             }
           }
           if (sePuedePintar) {
-            // System.out.println("Pintando Nodo " + i + " de color " + colorActual);
+//            System.out.println("Pintando Nodo " + i + " de color " + colorActual);
             colorNodo[i] = colorActual;
             nodoColoreado[i] = true;
           }
@@ -115,9 +122,17 @@ public abstract class Grafo {
       }
       siguiente = cola.poll();
     }
-    return colorActual;
+    String out = nodos.length + " " + colorActual + " " + matriz.cantidadAristas() + " " +
+        matriz.adyacencia() + " " + matriz.getMaxGrado() + " " + matriz.getMenorGrado() + "\n";
+    for(int i = 0; i < colorNodo.length ; i++) {
+      out += i + " " + colorNodo[i] + "\n";
+    }
+    System.out.println("Total Colores: " + colorActual);
+    writer.write(out);
+    writer.close();
   }
 
+  
   public String toString() {
     String out = "";
     for (int i = 0; i < nodos.length; i++)

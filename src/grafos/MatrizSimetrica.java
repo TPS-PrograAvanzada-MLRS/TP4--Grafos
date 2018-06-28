@@ -74,7 +74,20 @@ public class MatrizSimetrica {
     }
     return mayor;
   }
-
+  
+  public int cantidadAristas() {
+    int cantAristas = 0;
+    for(int i = 0; i < grados.length; i++)
+      cantAristas += grados[i];
+    
+    return cantAristas/2;
+  }
+  
+  public double adyacencia() {
+    int cantAristas = cantidadAristas();
+    int cantAristasPosibles = (grados.length * (grados.length - 1)) / 2;
+    return cantAristas / (double) cantAristasPosibles;
+  }
   public String toString() {
     String out = "   ";
     for (int i = 1; i <= matriz.length; i++)
