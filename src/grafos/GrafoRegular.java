@@ -21,7 +21,8 @@ public class GrafoRegular extends Grafo {
   }
 
   private void generar(int cantNodos, int grado) {
-    if( cantNodos % 2 == 1 && grado % 2 == 0)
+    int timeout = 0;
+    if (cantNodos % 2 == 1 && grado % 2 == 0)
       return;
     Random rand = new Random();
     for (int i = 0; i < cantNodos; i++) {
@@ -30,6 +31,17 @@ public class GrafoRegular extends Grafo {
         if (matriz.getGrado(nodoTentativo) < grado
             && matriz.getGrado(nodoTentativo) == matriz.getMenorGrado())
           matriz.agregar(i, nodoTentativo);
+        else {
+          timeout++;
+          if (timeout > 10000) {
+            for (int j = 0; j < nodos.length - 1; j++) {
+              for (int k = j + 1; k < nodos.length; k++) {
+                matriz.sacar(j, k);
+                i = 0;
+              }
+            }
+          }
+        }
       }
     }
   }

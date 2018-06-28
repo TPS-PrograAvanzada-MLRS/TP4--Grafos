@@ -18,14 +18,19 @@ public class GrafoPartito extends Grafo {
         }
       }
     } else {
-      int cantASacar = cantNodos % nPartito;
-      for (int i = 0; i < cantNodos - 1; i++) {
-        for (int j = i + 1; j < cantNodos; j++) {
-          matriz.agregar(i, j);
+      int cantGrupos = cantNodos % nPartito;
+      
+      for (int h = 0; h < cantGrupos * 2; h += 2) {
+        for (int i = h; i < 2 + h; i++) {
+          for (int j = h + 2; j < nodos.length; j++) {
+            matriz.agregar(i, j);
+          }
         }
       }
-      for (int i = 0; i < cantASacar; i++) {
-        matriz.sacar(i, i + 1);
+      for ( int h = cantGrupos * 2; h < nodos.length -1; h++) {
+        for(int i = h +1; i < nodos.length; i++) {
+          matriz.agregar(h, i);
+        }
       }
     }
   }
