@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-public abstract class Grafo {
+public class Grafo {
   int[] nodos;
   MatrizSimetrica matriz;
 
@@ -132,12 +132,32 @@ public abstract class Grafo {
     writer.close();
   }
 
-  
   public String toString() {
     String out = "";
     for (int i = 0; i < nodos.length; i++)
       out += nodos[i] + " ";
     return "lista de nodos: " + out + "\n" + "Matriz de Adyacencia: \n" + matriz.toString();
+  }
+  
+  public void toArchivo(String path) {
+    PrintWriter writer = null;
+      try {
+        writer = new PrintWriter(path);
+      } catch (FileNotFoundException e) {
+        e.printStackTrace();
+        return;
+      }
+    String out = nodos.length + " " + matriz.cantidadAristas() + " "  + matriz.adyacencia() +
+        " "  + matriz.getMaxGrado() + " " + matriz.getMenorGrado() + "\n";
+    for (int i = 0; i < nodos.length-1; i++) {
+      for (int j = i +1; j < nodos.length; j++) {
+        if(matriz.isSet(i, j)) {
+          out += i + " " + j + "\n";
+        }
+      }
+    }
+    writer.write(out);
+    writer.close();
   }
 
 }
